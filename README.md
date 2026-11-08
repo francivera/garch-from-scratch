@@ -55,10 +55,12 @@ where $h > 0$ is the step size.
 
 ### Choosing Initial Parameters ($\theta^0$)
 To obtain a good starting point $\theta^0 = (\alpha_0^0, \alpha_1^0)$, we evaluate the log-likelihood function across a grid of random vectors within a feasible space:
-* Assuming stationarity and the information from filtration $\mathcal{F}_{t-1}$:  
-  $$\mathbb{E}[\varepsilon_t^2] = \mathbb{E}[\varepsilon_{t-1}^2] = \text{Var}(\varepsilon) = \sigma^2$$
+- Assuming stationarity and the information from filtration $\mathcal{F}_{t-1}$:  
+
+  $$\mathbb{E}[\varepsilon_t^2] = \mathbb{E}[\varepsilon_{(t-1)^2}] = \text{Var}(\varepsilon) = \sigma^2$$
   This holds because $\mathbb{E}[\varepsilon_t] = \mathbb{E}[\sigma_t z_t \mid \mathcal{F}_{t-1}] = \sigma_t \mathbb{E}[z_t \mid \mathcal{F}_{t-1}] = 0$.
-* Taking expectations of the variance equation:
+- Taking expectations of the variance equation:
+
   $$\sigma^2 = \mathbb{E}[\sigma_t^2] = \mathbb{E}[\alpha_0 + \alpha_1 \varepsilon_{t-1}^2] = \alpha_0 + \alpha_1 \sigma^2$$
   Which yields the stationary variance condition (*):
   $$\sigma^2 = \frac{\alpha_0}{1 - \alpha_1}$$
