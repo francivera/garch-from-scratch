@@ -17,6 +17,12 @@ $$y_t = \mu_t + \varepsilon_t$$
 $$\varepsilon_t = \sigma_t Z_t, \quad \text{with } Z_t \sim \mathcal{N}(0,1) \text{ i.i.d.}$$
 
 *(Remark: To keep things simple, since we are not focusing on time-varying means, we will consider $\mu_t$ as a constant.)*
+Since $\sigma_t$ is a function of $z_1,\dots,z_{t-1}$ (it is $\mathcal{F}_{t-1}$-measurable), this is because:
+$$
+\mathbb{E}[\sigma_t^2 z_t^2] = \mathbb{E}\big[\mathbb{E}[\sigma_t^2 z_t^2 \mid \mathcal{F}_{t-1}]\big] = \mathbb{E}\big[\sigma_t^2 \,\mathbb{E}[z_t^2 \mid \mathcal{F}_{t-1}]\big] = \mathbb{E}[\sigma_t^2]
+$$ 
+and  $z_t$ are i.i.d., $z_t$ is independent of $\sigma_t$
+Also, we will consider the stationarity of the process $\{\varepsilon_t\}_{t\geq 1}$, because of this we have that $\mathbb{E}[\sigma_t]=\mathbb{E}[\varepsilon_t]=\mu$, $\sigma_t^2=var(\varepsilon_t)=\sigma^2$ and that $cov(\varepsilon_t,\varepsilon_{t+h}$ does not depend on the $t$
 
 ## 3. Likelihood Function & Optimization
 To adjust this model to our data, we need to determine which parameters are most likely by maximizing the likelihood function.
@@ -87,3 +93,22 @@ $$l(\alpha_0, \alpha_1, \beta) = -\frac{1}{2} \sum_{t=2}^n \left( \log(2\pi) + \
 $$\theta^{k+1} = \theta^k + h \nabla l(\theta^k)$$
 
 where $h > 0$ is the step size.
+Computing the derivatives as before:
+$$
+\begin{aligned}
+\frac{\partial \ell}{\partial \alpha_0} &= \sum_{t=2}^{T} \frac{1}{2\sigma_t^4} \left( \varepsilon_t^2 - \sigma_t^2 \right) \frac{\partial \sigma_t^2}{\partial \alpha_0} \\
+\frac{\partial \ell}{\partial \alpha_1} &= \sum_{t=2}^{T} \frac{1}{2\sigma_t^4} \left( \varepsilon_t^2 - \sigma_t^2 \right) \frac{\partial \sigma_t^2}{\partial \alpha_1} \\
+\frac{\partial \ell}{\partial \beta}    &= \sum_{t=2}^{T} \frac{1}{2\sigma_t^4} \left( \varepsilon_t^2 - \sigma_t^2 \right) \frac{\partial \sigma_t^2}{\partial \beta}
+\end{aligned}
+$$
+and the derivatives of $\sigma_t^2$ can be calculated recursively as in ARCH(1).
+$$
+\begin{aligned}
+\frac{\partial \sigma_t^2}{\partial \alpha_0} &= 1 + \beta\,\frac{\partial \sigma_{t-1}^2}{\partial \alpha_0} \\
+\frac{\partial \sigma_t^2}{\partial \alpha_1} &= \varepsilon_{t-1}^2 + \beta\,\frac{\partial \sigma_{t-1}^2}{\partial \alpha_1} \\
+\frac{\partial \sigma_t^2}{\partial \beta}    &= \sigma_{t-1}^2 + \beta\,\frac{\partial \sigma_{t-1}^2}{\partial \beta}
+\end{aligned}
+$$
+And the initial conditions $\frac{\partial\sigma_0^2}{\partial\theta_i}=0, i=1,2,3$
+Doing the same proccedure as in the ARCH case, we get to $\sigma^2=\frac{\alpha_0}{1-\alpha_1-\beta}$, so in our algorythm we should consider that $\alpha_1+\beta<1$
+
