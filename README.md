@@ -94,6 +94,7 @@ $$\theta^{k+1} = \theta^k + h \nabla l(\theta^k)$$
 
 where $h > 0$ is the step size.
 Computing the derivatives as before:
+
 $$
 \begin{aligned}
 \frac{\partial \ell}{\partial \alpha_0} &= \sum_{t=2}^{T} \frac{1}{2\sigma_t^4} \left( \varepsilon_t^2 - \sigma_t^2 \right) \frac{\partial \sigma_t^2}{\partial \alpha_0} \\
@@ -101,7 +102,9 @@ $$
 \frac{\partial \ell}{\partial \beta}    &= \sum_{t=2}^{T} \frac{1}{2\sigma_t^4} \left( \varepsilon_t^2 - \sigma_t^2 \right) \frac{\partial \sigma_t^2}{\partial \beta}
 \end{aligned}
 $$
-and the derivatives of $\sigma_t^2$ can be calculated recursively as in ARCH(1).
+
+The derivatives of $\sigma_t^2$ can be computed recursively, since $\sigma_{t-1}^2$ also depends on the parameters:
+
 $$
 \begin{aligned}
 \frac{\partial \sigma_t^2}{\partial \alpha_0} &= 1 + \beta\,\frac{\partial \sigma_{t-1}^2}{\partial \alpha_0} \\
@@ -109,6 +112,14 @@ $$
 \frac{\partial \sigma_t^2}{\partial \beta}    &= \sigma_{t-1}^2 + \beta\,\frac{\partial \sigma_{t-1}^2}{\partial \beta}
 \end{aligned}
 $$
-And the initial conditions $\frac{\partial\sigma_0^2}{\partial\theta_i}=0, i=1,2,3$
-Doing the same proccedure as in the ARCH case, we get to $\sigma^2=\frac{\alpha_0}{1-\alpha_1-\beta}$, so in our algorythm we should consider that $\alpha_1+\beta<1$
+
+with initial conditions $\frac{\partial \sigma_1^2}{\partial \theta_i} = 0$ for $i = 1, 2, 3$.
+
+Following the same procedure as in the ARCH case, we get
+
+$$
+\sigma^2 = \frac{\alpha_0}{1-\alpha_1-\beta},
+$$
+
+so the algorithm must enforce $\alpha_1 + \beta < 1$.
 
